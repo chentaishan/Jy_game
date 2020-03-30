@@ -1,11 +1,13 @@
 package com.example.jy_game;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -51,6 +53,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         mGridview = (GridView) findViewById(R.id.gridview);
+        mGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(MainActivity.this,WholeActivity.class));
+            }
+        });
         mGridview.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
