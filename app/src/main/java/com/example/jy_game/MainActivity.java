@@ -24,9 +24,10 @@ public class MainActivity extends AppCompatActivity {
     private GridView mGridview;
 
     private static final String TAG = "MainActivity";
-    List<String>  stringList = new ArrayList<>();
+    List<String> stringList = new ArrayList<>();
 
-    String rootPath ="";
+    String rootPath = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             final String[] twoPath = assets.list(path);
 
             for (String s : twoPath) {
-                stringList.add( path+"/"+s);
+                stringList.add(path + "/" + s);
 
             }
         } catch (IOException e) {
@@ -52,11 +53,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        mGridview = (GridView) findViewById(R.id.gridview);
+        mGridview = findViewById(R.id.gridview);
         mGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(MainActivity.this,WholeActivity.class));
+                startActivity(new Intent(MainActivity.this, WholeActivity.class));
             }
         });
         mGridview.setAdapter(new BaseAdapter() {
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             public View getView(int position, View convertView, ViewGroup parent) {
 
                 final String s = stringList.get(position);
-                Log.d(TAG, "getView: "+s);
+                Log.d(TAG, "getView: " + s);
 
                 final ImageView imageView = new ImageView(MainActivity.this);
                 imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
