@@ -42,14 +42,35 @@ public class WholeActivity extends AppCompatActivity implements View.OnTouchList
     int currPic;
     int maxPics = 6;
     private TextView mName;
+    private RelativeLayout.LayoutParams layoutParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_whole);
 
+        getRandomNum();
+
+        mName = findViewById(R.id.name);
+        mImageView = findViewById(R.id.image);
+        mImageView.setOnTouchListener(this);
+        mGridview = findViewById(R.id.gridview);
+        mGridview.setColumnNum(3);
+
+
+        setPicView();
+
+
+    }
+
+    /**
+     * 获取随机数 和设置图片
+     */
+    public void getRandomNum() {
+
         final int randomIndex = MyApp.stringList.size() - 1;
 
+        drawablePaths.clear();
         for (int i = 0; i < maxPics - 1; i++) {
             final Random random = new Random();
             final int index = random.nextInt(randomIndex);
@@ -61,18 +82,16 @@ public class WholeActivity extends AppCompatActivity implements View.OnTouchList
         final Random random = new Random();
         final int index = random.nextInt(5);
 
-        drawablePaths.add(index,hostDrawable);
+        drawablePaths.add(index, hostDrawable);
 
-        initView();
-
-
+        currPic++;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        final RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImageView.getLayoutParams();
+        layoutParams = (RelativeLayout.LayoutParams) mImageView.getLayoutParams();
 
         layoutParams.width = mGridview.getImageItemWidth();
         layoutParams.height = mGridview.getImageItemWidth();
@@ -86,7 +105,8 @@ public class WholeActivity extends AppCompatActivity implements View.OnTouchList
         }
 
         l = DensityUtil.getScreenWidth(this) - layoutParams.width;
-        t = DensityUtil.getScreenHeight(this) - layoutParams.width - actionBarHeight - DensityUtil.getStatusBarHeight(this);
+        t = DensityUtil.getScreenHeight(this) - layoutParams.width
+                - actionBarHeight ;
 
         Log.d(TAG, "onResume: " + t);
 
@@ -94,18 +114,13 @@ public class WholeActivity extends AppCompatActivity implements View.OnTouchList
 
     }
 
-    private void initView() {
-        mName = findViewById(R.id.name);
-        mImageView = findViewById(R.id.image);
-        mImageView.setOnTouchListener(this);
+    private void setPicView() {
 
         try {
             mImageView.setImageBitmap(BitmapFactory.decodeStream(getAssets().open(hostDrawable)));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mGridview = findViewById(R.id.gridview);
-        mGridview.setColumnNum(3);
 
         try {
             mGridview.initGridList(this, drawablePaths, new MySelfGridView.IUpdateUIListener() {
@@ -161,14 +176,22 @@ public class WholeActivity extends AppCompatActivity implements View.OnTouchList
                 final View viewAtActivity = DensityUtil.findViewByXY(mGridview, left, top);
 
 
-                if (viewAtActivity != null) {
+                if (viewAtActivity != null&&hostDrawable.equals(viewAtActivity.getTag())) {
 
                     Toast.makeText(this, "哎呦，不错哦！", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onTouch: UP" + viewAtActivity == null ? "null" : viewAtActivity.getTag() + "");
-                }else{
+
+                    getRandomNum();
+                    mTop =0;
+                    mLeft =0;
+                    l = DensityUtil.getScreenWidth(this) - layoutParams.width;
+                    setImageViewMargin(l / 2, l / 2);
+                    setPicView();
+
+                } else {
 
 
-                    Toast.makeText(this, "不对啊！" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "不对啊！", Toast.LENGTH_SHORT).show();
                 }
 
                 break;

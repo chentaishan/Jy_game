@@ -7,6 +7,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -106,7 +107,7 @@ public class DensityUtil {
 
     private static final String TAG = "DensityUtil";
 
-    static int length = 50;
+    static int length = 30;
     /**
      * 检查拖动的view 和当前被覆盖的view 是否大致重叠
      * @param view
@@ -117,7 +118,7 @@ public class DensityUtil {
     private static boolean isTouchPointInView(View view, int x, int y) {
 
 
-        Log.d(TAG, "isTouchPointInView: x="+x+"  y="+y);
+        Log.d(TAG, "isTouchPointInView: x="+(view instanceof ImageView));
 
         int[] location = new int[2];
         view.getLocationOnScreen(location);
@@ -125,7 +126,7 @@ public class DensityUtil {
         int top = location[1];
 
 
-        Log.d(TAG, "isTouchPointInView: left="+left+"  top="+top);
+        Log.d(TAG, "isTouchPointInView:  x="+x+"  y="+y+ "  left="+left+" top="+top);
         if (Math.abs(y- top)<= length && Math.abs(x -left)  <= length  ) {
             return true;
         }

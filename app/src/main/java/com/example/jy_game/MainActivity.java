@@ -28,12 +28,12 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     int[] gridDrawable = {
-             R.drawable.identicalmatching
-            ,R.drawable.expressivelabeling
+            R.drawable.identicalmatching
+            , R.drawable.expressivelabeling
             , R.drawable.similarmatching
             , R.drawable.pictureidentification
             , R.drawable.receptivelabeling
-            ,R.drawable.sorting};
+            , R.drawable.sorting};
 
     String[] names = {"完全匹配"
             , "相似匹配"
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             , "认知考核"
             , "图片重复读音"
             , "图片分类"
-            };
+    };
     String rootPath = "";
 
     @Override
@@ -84,11 +84,11 @@ public class MainActivity extends AppCompatActivity {
             public View getView(int position, View convertView, ViewGroup parent) {
 
 
-                View root = LayoutInflater.from(MainActivity.this).inflate(R.layout.main_grid_item,null);
+                View root = LayoutInflater.from(MainActivity.this).inflate(R.layout.main_grid_item, null);
                 final int drawable = gridDrawable[position];
 
-                final ImageView imageView =root.findViewById(R.id.img);
-                final TextView name =root.findViewById(R.id.name);
+                final ImageView imageView = root.findViewById(R.id.img);
+                final TextView name = root.findViewById(R.id.name);
                 name.setText(names[position]);
 
 
