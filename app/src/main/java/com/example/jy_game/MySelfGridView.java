@@ -35,7 +35,7 @@ public class MySelfGridView extends LinearLayout {
     private int columnNum = 2;
     private static int imageWidth = 0;
     private LinearLayout rowLinearlayout;
-    int totalDividerWidth = 30 * 3;
+    int totalDividerWidth = 30 * 2;
 
     /**
      * 设置所有间隔距离，方便计算item的宽度
@@ -77,7 +77,7 @@ public class MySelfGridView extends LinearLayout {
                 rowLinearlayout = new LinearLayout(getContext());
                 rowLinearlayout.setOrientation(HORIZONTAL);
                 LayoutParams layout = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//                layout.setMargins(30, 0, 0, 0);
+                layout.setMargins(0, 0, 0, 30);
                 rowLinearlayout.setLayoutParams(layout);
 
                 rowLinearlayout.addView(item);
