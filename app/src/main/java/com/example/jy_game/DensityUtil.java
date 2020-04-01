@@ -87,7 +87,7 @@ public class DensityUtil {
                     break;
                 }
             }
-        } else {
+        } else if(view instanceof ImageView){
             targetView = getTouchTarget(view, x, y);
         }
         return targetView;

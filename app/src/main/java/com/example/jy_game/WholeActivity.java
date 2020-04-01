@@ -71,16 +71,20 @@ public class WholeActivity extends AppCompatActivity implements View.OnTouchList
         final int randomIndex = MyApp.stringList.size() - 1;
 
         drawablePaths.clear();
-        for (int i = 0; i < maxPics - 1; i++) {
+        for (int i = 0; drawablePaths.size()< maxPics-1; i++) {
             final Random random = new Random();
             final int index = random.nextInt(randomIndex);
-
-            drawablePaths.add(MyApp.stringList.get(index));
+            Log.d(TAG, "getRandomNum: "+index);
+            String path = MyApp.stringList.get(index);
+            // 避免数据重复
+            if (!drawablePaths.contains(path)&&index!=currPic){
+                drawablePaths.add(path);
+            }
         }
         hostDrawable = MyApp.stringList.get(currPic);
 
         final Random random = new Random();
-        final int index = random.nextInt(5);
+        final int index = random.nextInt(10000)%(maxPics);
 
         drawablePaths.add(index, hostDrawable);
 
