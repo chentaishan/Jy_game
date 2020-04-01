@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
     int[] gridDrawable = {
             R.drawable.identicalmatching
-            , R.drawable.expressivelabeling
             , R.drawable.similarmatching
+            , R.drawable.expressivelabeling
             , R.drawable.pictureidentification
             , R.drawable.receptivelabeling
             , R.drawable.sorting};
@@ -59,9 +59,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                final Intent intent = new Intent(MainActivity.this, WholeActivity.class);
+                switch (position){
 
-                startActivity(intent);
+                    case 0:
+                        Intent intent = new Intent(MainActivity.this, WholeActivity.class);
+
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        intent = new Intent(MainActivity.this, LikeActivity.class);
+
+                        startActivity(intent);
+                        break;
+                }
+
             }
         });
         mGridview.setAdapter(new BaseAdapter() {
