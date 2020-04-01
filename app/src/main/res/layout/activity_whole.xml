@@ -6,32 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".WholeActivity">
 
+    <com.example.jy_game.MySelfGridView
+        android:id="@+id/gridview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentBottom="true" />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:background="#C4C4C4"
         android:gravity="center"
-        android:text="apple"
-        android:layout_alignParentTop="true"
-       />
-
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="222dp"
-        android:layout_height="222dp"
-        android:layout_marginTop="55dp"
-        android:src="@drawable/ic_apple_001"
+        android:text="apple" />
 
 
-        android:layout_below="@+id/name" />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name"
+            android:layout_marginTop="55dp"
+            android:scaleType="centerCrop"
+             />
 
 
-    <GridView
-        android:id="@+id/gridview"
-        android:layout_width="match_parent"
-        android:layout_below="@+id/image"
-        android:layout_height="wrap_content"
-        />
+
 </RelativeLayout>

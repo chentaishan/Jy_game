@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:numColumns="2"
+        android:horizontalSpacing="11dp"
         android:id="@+id/gridview"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

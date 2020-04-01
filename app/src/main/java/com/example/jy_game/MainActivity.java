@@ -5,12 +5,14 @@ import android.content.res.AssetManager;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +26,22 @@ public class MainActivity extends AppCompatActivity {
     private GridView mGridview;
 
     private static final String TAG = "MainActivity";
-    List<String> stringList = new ArrayList<>();
 
+    int[] gridDrawable = {
+             R.drawable.identicalmatching
+            ,R.drawable.expressivelabeling
+            , R.drawable.similarmatching
+            , R.drawable.pictureidentification
+            , R.drawable.receptivelabeling
+            ,R.drawable.sorting};
+
+    String[] names = {"完全匹配"
+            , "相似匹配"
+            , "分类辨识"
+            , "认知考核"
+            , "图片重复读音"
+            , "图片分类"
+            };
     String rootPath = "";
 
     @Override
@@ -36,39 +52,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        final AssetManager assets = getResources().getAssets();
-        try {
-            final String[] list = assets.list("");
-
-            String path = list[0];
-
-            final String[] twoPath = assets.list(path);
-
-            for (String s : twoPath) {
-                stringList.add(path + "/" + s);
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
 
         mGridview = findViewById(R.id.gridview);
         mGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(MainActivity.this, WholeActivity.class));
+
+                final Intent intent = new Intent(MainActivity.this, WholeActivity.class);
+
+                startActivity(intent);
             }
         });
         mGridview.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return stringList.size();
+                return gridDrawable.length;
             }
 
             @Override
             public Object getItem(int position) {
-                return stringList.get(position);
+                return gridDrawable[position];
             }
 
             @Override
@@ -79,17 +83,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
 
-                final String s = stringList.get(position);
-                Log.d(TAG, "getView: " + s);
 
-                final ImageView imageView = new ImageView(MainActivity.this);
-                imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                try {
-                    imageView.setImageBitmap(BitmapFactory.decodeStream(assets.open(s)));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return imageView;
+                View root = LayoutInflater.from(MainActivity.this).inflate(R.layout.main_grid_item,null);
+                final int drawable = gridDrawable[position];
+
+                final ImageView imageView =root.findViewById(R.id.img);
+                final TextView name =root.findViewById(R.id.name);
+                name.setText(names[position]);
+
+
+                imageView.setImageResource(drawable);
+
+                return root;
             }
         });
     }

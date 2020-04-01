@@ -2,10 +2,14 @@ package com.example.jy_game;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.Display;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 public class DensityUtil {
 
@@ -68,4 +72,63 @@ public class DensityUtil {
         return defaultDisplay.getHeight();
     }
 
+
+
+
+    public static View findViewByXY(View view, int x, int y) {
+        View targetView = null;
+        if (view instanceof ViewGroup) {
+            // 父容器,遍历子控件
+            ViewGroup v = (ViewGroup) view;
+            for (int i = 0; i < v.getChildCount(); i++) {
+                targetView = findViewByXY(v.getChildAt(i), x, y);
+                if (targetView != null) {
+                    break;
+                }
+            }
+        } else {
+            targetView = getTouchTarget(view, x, y);
+        }
+        return targetView;
+
+    }
+
+    private static View getTouchTarget(View view, int x, int y) {
+        View targetView = null;
+
+            if (isTouchPointInView(view, x, y)) {
+                targetView = view;
+
+            }
+
+        return targetView;
+    }
+
+    private static final String TAG = "DensityUtil";
+
+    static int length = 50;
+    /**
+     * 检查拖动的view 和当前被覆盖的view 是否大致重叠
+     * @param view
+     * @param x
+     * @param y
+     * @return
+     */
+    private static boolean isTouchPointInView(View view, int x, int y) {
+
+
+        Log.d(TAG, "isTouchPointInView: x="+x+"  y="+y);
+
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        int left = location[0];
+        int top = location[1];
+
+
+        Log.d(TAG, "isTouchPointInView: left="+left+"  top="+top);
+        if (Math.abs(y- top)<= length && Math.abs(x -left)  <= length  ) {
+            return true;
+        }
+        return false;
+    }
 }

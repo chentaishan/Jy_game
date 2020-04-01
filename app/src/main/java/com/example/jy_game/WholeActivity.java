@@ -1,35 +1,70 @@
 package com.example.jy_game;
 
+import android.content.res.AssetManager;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static android.widget.RelativeLayout.CENTER_HORIZONTAL;
+
 public class WholeActivity extends AppCompatActivity implements View.OnTouchListener {
 
-    private TextView mName;
-    private ImageView mImageView;
-    private GridView mGridview;
 
+    private ImageView mImageView;
+    private MySelfGridView mGridview;
+    List<String> drawablePaths = new ArrayList<>();
     int l, t;
+
+    String hostDrawable;
+    //    当前对比的是第几张
+    int currPic;
+    int maxPics = 6;
+    private TextView mName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_whole);
+
+        final int randomIndex = MyApp.stringList.size() - 1;
+
+        for (int i = 0; i < maxPics - 1; i++) {
+            final Random random = new Random();
+            final int index = random.nextInt(randomIndex);
+
+            drawablePaths.add(MyApp.stringList.get(index));
+        }
+        hostDrawable = MyApp.stringList.get(currPic);
+
+        final Random random = new Random();
+        final int index = random.nextInt(5);
+
+        drawablePaths.add(index,hostDrawable);
+
         initView();
+
 
     }
 
@@ -37,32 +72,60 @@ public class WholeActivity extends AppCompatActivity implements View.OnTouchList
     protected void onResume() {
         super.onResume();
 
-        // Calculate ActionBar height
+        final RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImageView.getLayoutParams();
+
+        layoutParams.width = mGridview.getImageItemWidth();
+        layoutParams.height = mGridview.getImageItemWidth();
+        mImageView.setLayoutParams(layoutParams);
+
         TypedValue tv = new TypedValue();
         int actionBarHeight = 0;
         if (this.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
             actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, this.getResources().getDisplayMetrics());
             Log.i(TAG, "------------actionBarHeight=" + actionBarHeight);
         }
-        final int size = DensityUtil.dp2px(this, 222f);
 
-        l = DensityUtil.getScreenWidth(this) -size;
-        t = DensityUtil.getScreenHeight(this) -size - actionBarHeight-DensityUtil.getStatusBarHeight(this);
+        l = DensityUtil.getScreenWidth(this) - layoutParams.width;
+        t = DensityUtil.getScreenHeight(this) - layoutParams.width - actionBarHeight - DensityUtil.getStatusBarHeight(this);
 
-        Log.d(TAG, "onResume: "+t);
+        Log.d(TAG, "onResume: " + t);
 
-        setImageViewMargin(l/2,l/2);
+        setImageViewMargin(l / 2, l / 2);
 
     }
 
     private void initView() {
         mName = findViewById(R.id.name);
         mImageView = findViewById(R.id.image);
-        mGridview = findViewById(R.id.gridview);
         mImageView.setOnTouchListener(this);
 
-    }
+        try {
+            mImageView.setImageBitmap(BitmapFactory.decodeStream(getAssets().open(hostDrawable)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mGridview = findViewById(R.id.gridview);
+        mGridview.setColumnNum(3);
 
+        try {
+            mGridview.initGridList(this, drawablePaths, new MySelfGridView.IUpdateUIListener() {
+                @Override
+                public void setItem(Object o, ImageView img) {
+
+                    String path = (String) o;
+                    try {
+                        img.setTag(path);
+                        img.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open(path)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
@@ -87,6 +150,27 @@ public class WholeActivity extends AppCompatActivity implements View.OnTouchList
                 startY = (int) event.getRawY();
                 mTop = mImageView.getTop();
                 mLeft = mImageView.getLeft();
+
+
+                int[] location = new int[2];
+                mImageView.getLocationOnScreen(location);
+                int left = location[0];
+                int top = location[1];
+
+                Log.d(TAG, "onTouch: onTop=" + mTop + "  mLeft=" + mLeft);
+                final View viewAtActivity = DensityUtil.findViewByXY(mGridview, left, top);
+
+
+                if (viewAtActivity != null) {
+
+                    Toast.makeText(this, "哎呦，不错哦！", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onTouch: UP" + viewAtActivity == null ? "null" : viewAtActivity.getTag() + "");
+                }else{
+
+
+                    Toast.makeText(this, "不对啊！" , Toast.LENGTH_SHORT).show();
+                }
+
                 break;
         }
         return true;
