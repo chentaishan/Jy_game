@@ -59,7 +59,7 @@ public class MySelfGridView extends LinearLayout {
         this.columnNum = columnNum;
     }
 
-    public <T> void initGridList(Activity context, final List<T> listBeans, IUpdateUIListener iUpdateUIListener) throws IllegalAccessException {
+    public <T> void initGridList(Activity context, final T[] listBeans, IUpdateUIListener iUpdateUIListener) throws IllegalAccessException {
         if (columnNum == 0) {
             throw new IllegalAccessException("请设置列数！");
         }
@@ -67,9 +67,9 @@ public class MySelfGridView extends LinearLayout {
         imageWidth = DensityUtil.getScreenWidth(context) - totalDividerWidth;
         imageWidth = imageWidth / columnNum;
         removeAllViews();
-        for (int i = 0; i < listBeans.size(); i++) {
+        for (int i = 0; i < listBeans.length; i++) {
 
-            T t = listBeans.get(i);
+            T t = listBeans[i];
 
             View item = initItemView(t);
 

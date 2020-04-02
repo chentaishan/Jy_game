@@ -1,41 +1,22 @@
 package com.example.jy_game;
 
-import android.content.res.AssetManager;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import static android.widget.RelativeLayout.CENTER_HORIZONTAL;
 
 public class WholeActivity extends BaseActivity implements View.OnTouchListener {
 
 
-
+    private static final String TAG = "WholeActivity";
 
     protected TextView mName;
-
+    //    当前对比的是第几张
+    int currPic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +38,41 @@ public class WholeActivity extends BaseActivity implements View.OnTouchListener 
 
 
         setPicView(mImageView,mGridview);
+    }
+
+    @Override
+    protected void getEachHostPic() {
+        hostDrawable = MyApp.stringList.get(currPic);
+
+        final Random random = new Random();
+        final int index = random.nextInt(10000)%(maxPics);
+        Log.d(TAG, "当前主图片随机插位: "+index);
+        drawablePaths[index]=hostDrawable;
+
+        currPic++;
+
+
+    }
+
+    @Override
+    public void getEachPageList() {
+        final int randomIndex = MyApp.stringList.size() - 1;
+
+
+        for (int x=0;x<drawablePaths.length;x++  ) {
+            final String path = drawablePaths[x];
+
+            if (TextUtils.isEmpty(path)){
+                final Random random = new Random();
+                final int index = random.nextInt(randomIndex);
+                Log.d(TAG, "getRandomNum: "+index);
+                String p = MyApp.stringList.get(index);
+
+                drawablePaths[x]=p;
+            }
+
+        }
+
     }
 
     @Override

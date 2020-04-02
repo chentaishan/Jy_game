@@ -9,12 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,12 +19,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected TextView mName;
     protected ImageView mImageView;
     protected MySelfGridView mGridview;
-    List<String> drawablePaths = new ArrayList<>();
+     String[] drawablePaths ;
     int l, t;
 
     String hostDrawable;
-    //    当前对比的是第几张
-    int currPic;
+
     int maxPics = 6;
 
     protected int startX = 0;
@@ -43,7 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        drawablePaths = new String[6];
 
 
 
@@ -84,28 +79,30 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public void getRandomNum() {
 
-        final int randomIndex = MyApp.stringList.size() - 1;
+        //清除数组
 
-        drawablePaths.clear();
-        for (int i = 0; drawablePaths.size()< maxPics-1; i++) {
-            final Random random = new Random();
-            final int index = random.nextInt(randomIndex);
-            Log.d(TAG, "getRandomNum: "+index);
-            String path = MyApp.stringList.get(index);
-            // 避免数据重复
-            if (!drawablePaths.contains(path)&&index!=currPic){
-                drawablePaths.add(path);
-            }
+        for (int i = 0; i < drawablePaths.length; i++) {
+            drawablePaths[i]="";
         }
-        hostDrawable = MyApp.stringList.get(currPic);
 
-        final Random random = new Random();
-        final int index = random.nextInt(10000)%(maxPics);
+        getEachHostPic();
+        getEachPageList();
 
-        drawablePaths.add(index, hostDrawable);
 
-        currPic++;
+
     }
+
+    /**
+     * 获取每个页面的主图片
+     */
+
+    protected abstract void getEachHostPic();
+    /**
+     * 获取每个页面的要对比的图片集合
+     */
+
+    protected abstract void getEachPageList();
+
 
     /**
      * 动态设置控件的marginTop 和 marginLeft的值
