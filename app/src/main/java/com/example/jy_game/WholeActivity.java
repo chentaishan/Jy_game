@@ -82,6 +82,10 @@ public class WholeActivity extends BaseActivity implements View.OnTouchListener 
 
     @Override
     protected void ifSame(View view) {
+        if (view==null){
+            anim();
+            return;
+        }
         if (view != null&&hostDrawable.equals(view.getTag())) {
 
 
@@ -96,7 +100,7 @@ public class WholeActivity extends BaseActivity implements View.OnTouchListener 
 
         } else {
 
-
+            anim();
             Toast.makeText(this, "不对啊！", Toast.LENGTH_SHORT).show();
         }
     }

@@ -141,6 +141,7 @@ public class LikeActivity extends BaseActivity implements View.OnTouchListener {
 
         } else {
 
+            anim();
 
             Toast.makeText(this, "不对啊！", Toast.LENGTH_SHORT).show();
         }
@@ -151,34 +152,5 @@ public class LikeActivity extends BaseActivity implements View.OnTouchListener {
 
     }
 
-    public void anim(){
 
-        final int yuan = l/2;
-        Log.d(TAG, "anim: "+yuan+"  top="+mTop+"   mLeft="+mLeft);
-
-        // 指示器旋转
-        ValueAnimator valueAnimator1 = ValueAnimator.ofInt( mTop,yuan);
-
-        valueAnimator1.setDuration(500);
-
-        valueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (int) animation.getAnimatedValue();
-                Log.d(TAG, "anim: value="+value );
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImageView.getLayoutParams();
-                layoutParams.topMargin = value;
-                int progress = (value-yuan)*100/(mTop-yuan);
-                Log.d(TAG, "anim: progress="+progress );
-                layoutParams.leftMargin= (mLeft-yuan)*progress/100+yuan;
-                Log.d(TAG, "anim: leftMargin="+ layoutParams.leftMargin );
-
-
-                mImageView.setLayoutParams(layoutParams);
-            }
-        });
-
-
-        valueAnimator1.start();
-    }
 }
