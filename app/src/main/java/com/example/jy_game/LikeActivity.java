@@ -2,10 +2,13 @@ package com.example.jy_game;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -114,6 +117,12 @@ public class LikeActivity extends BaseActivity implements View.OnTouchListener {
 
     @Override
     protected void ifLike(View view) {
+
+        if (view==null){
+            anim();
+            return;
+        }
+        Log.d(TAG, "ifLike: "+view);
         String group = hostDrawable.substring(0, hostDrawable.lastIndexOf("/"));
         String tag = view.getTag() + "";
         tag = tag.substring(0, tag.lastIndexOf("/"));
@@ -140,5 +149,36 @@ public class LikeActivity extends BaseActivity implements View.OnTouchListener {
     @Override
     protected void ifSame(View view) {
 
+    }
+
+    public void anim(){
+
+        final int yuan = l/2;
+        Log.d(TAG, "anim: "+yuan+"  top="+mTop+"   mLeft="+mLeft);
+
+        // 指示器旋转
+        ValueAnimator valueAnimator1 = ValueAnimator.ofInt( mTop,yuan);
+
+        valueAnimator1.setDuration(500);
+
+        valueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (int) animation.getAnimatedValue();
+                Log.d(TAG, "anim: value="+value );
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImageView.getLayoutParams();
+                layoutParams.topMargin = value;
+                int progress = (value-yuan)*100/(mTop-yuan);
+                Log.d(TAG, "anim: progress="+progress );
+                layoutParams.leftMargin= (mLeft-yuan)*progress/100+yuan;
+                Log.d(TAG, "anim: leftMargin="+ layoutParams.leftMargin );
+
+
+                mImageView.setLayoutParams(layoutParams);
+            }
+        });
+
+
+        valueAnimator1.start();
     }
 }

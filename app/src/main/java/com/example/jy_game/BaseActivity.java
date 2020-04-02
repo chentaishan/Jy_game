@@ -31,6 +31,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected int mTop;
     protected int mLeft;
 
+
+
     protected RelativeLayout.LayoutParams layoutParams;
 
     private final String TAG =  getClass().getSimpleName();
