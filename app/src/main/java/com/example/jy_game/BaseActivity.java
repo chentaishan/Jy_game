@@ -73,8 +73,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         l = DensityUtil.getScreenWidth(this) - layoutParams.width;
-        t = DensityUtil.getScreenHeight(this) - layoutParams.width
-                - actionBarHeight;
+        t = DensityUtil.getScreenHeight(this) - layoutParams.width - actionBarHeight;
 
         Log.d(TAG, "onResume: " + t);
 
