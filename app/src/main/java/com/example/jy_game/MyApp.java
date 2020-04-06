@@ -1,6 +1,7 @@
 package com.example.jy_game;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.res.AssetManager;
 
 import java.io.IOException;
@@ -9,11 +10,14 @@ import java.util.List;
 
 public class MyApp extends Application {
 
+    public static Context context;
    static List<String> stringList = new ArrayList<>();
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        this.context = this;
 
         final AssetManager assets = getResources().getAssets();
         try {

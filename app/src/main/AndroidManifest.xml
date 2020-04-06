@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ExpressiveActivity"></activity>
+        <activity android:name=".SortActivity"></activity>
+        <activity android:name=".PictureActivity" />
+        <activity android:name=".ExpressiveActivity" />
         <activity android:name=".ReceptiveActivity" />
         <activity android:name=".LikeActivity" />
         <activity android:name=".WholeActivity" />

@@ -77,12 +77,12 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case 4:
-                        intent = new Intent(MainActivity.this, ReceptiveActivity.class);
+                        intent = new Intent(MainActivity.this, PictureActivity.class);
 
                         startActivity(intent);
                         break;
                     case 5:
-                        intent = new Intent(MainActivity.this, ReceptiveActivity.class);
+                        intent = new Intent(MainActivity.this, SortActivity.class);
 
                         startActivity(intent);
                         break;
