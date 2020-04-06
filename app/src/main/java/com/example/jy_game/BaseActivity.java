@@ -39,6 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected int mLeft;
 
     int defaultHeight=50;
+    protected int defaultLeft=0;
 
     protected RelativeLayout.LayoutParams layoutParams;
 
@@ -69,10 +70,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         l = DensityUtil.getScreenWidth(this) - layoutParams.width;
         t = DensityUtil.getScreenHeight(this) - layoutParams.width - getNavigationBarHeight()-30*2;
+        defaultLeft = l/2;
 
         Log.d(TAG, "onResume: " + t);
 
-        setImageViewMargin(l / 2, DensityUtil.dp2px(this,defaultHeight));
+        setImageViewMargin(defaultLeft, DensityUtil.dp2px(this,defaultHeight));
 
     }
     private int getNavigationBarHeight() {
@@ -218,11 +220,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void anim() {
 
-        final int yuan = l / 2;
+        final int yuan = DensityUtil.dp2px(this,defaultHeight);
         Log.d(TAG, "anim: " + yuan + "  top=" + mTop + "   mLeft=" + mLeft);
 
         // 指示器旋转
-        ValueAnimator valueAnimator1 = ValueAnimator.ofInt(mTop, yuan);
+        ValueAnimator valueAnimator1 = ValueAnimator.ofInt(mTop, DensityUtil.dp2px(this,defaultHeight));
 
         valueAnimator1.setDuration(500);
 
@@ -233,9 +235,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                 Log.d(TAG, "anim: value=" + value);
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImageView.getLayoutParams();
                 layoutParams.topMargin = value;
+
                 int progress = (value - yuan) * 100 / (mTop - yuan);
                 Log.d(TAG, "anim: progress=" + progress);
-                layoutParams.leftMargin = (mLeft - yuan) * progress / 100 + yuan;
+                layoutParams.leftMargin = (mLeft - defaultLeft) * progress / 100 + defaultLeft;
                 Log.d(TAG, "anim: leftMargin=" + layoutParams.leftMargin);
 
 
