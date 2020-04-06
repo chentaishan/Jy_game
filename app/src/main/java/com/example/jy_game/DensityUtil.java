@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.example.jy_game.view.SortTypeLayout;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -97,7 +99,7 @@ public class DensityUtil {
     private static View getTouchTarget(View view, int x, int y) {
         View targetView = null;
 
-            if (isTouchPointInView(view, x, y)) {
+            if (viewisInLayout(view, x, y)) {
                 targetView = view;
 
             }
@@ -128,6 +130,28 @@ public class DensityUtil {
 
         Log.d(TAG, "isTouchPointInView:  x="+x+"  y="+y+ "  left="+left+" top="+top);
         if (Math.abs(y- top)<= length && Math.abs(x -left)  <= length  ) {
+            return true;
+        }
+        return false;
+    }
+
+    public static View addItem2layout(View view, int x, int y){
+
+        if (view instanceof SortTypeLayout) {
+           return getTouchTarget(view, x, y);
+        }
+        return null;
+    }
+    private static boolean viewisInLayout(View layout, int x, int y) {
+
+
+
+        int[] location = new int[2];
+        layout.getLocationOnScreen(location);
+        int left = location[0];
+        int top = location[1];
+
+        if (x>=left&&x<=layout.getRight()&&(y>=top)) {
             return true;
         }
         return false;

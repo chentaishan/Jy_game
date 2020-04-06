@@ -113,15 +113,70 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
                 int left = location[0];
                 int top = location[1];
 
-                Log.d(TAG, "onTouch: onTop=" + mTop + "  mLeft=" + mLeft);
-//                final View viewAtActivity = DensityUtil.findViewByXY(mGridview, left, top);
-
-                setImageViewMargin(left,top);
+                addItem2Layout(mImage,left,top);
 
 
                 break;
         }
         return true;
+    }
+
+    private void addItem2Layout(ImageView mImage,int left, int top) {
+
+        final View leftView = DensityUtil.addItem2layout(mLayoutLeft, left, top);
+        final View rightView = DensityUtil.addItem2layout(mLayoutRight, left, top);
+        Log.d(TAG, "addItem2Layout: leftView=" + leftView + "  rightView=" + rightView);
+        final String imgPath   = (String) mImage.getTag();
+
+        if (leftView!=null&&imgPath.contains(leftGroupName)){
+            try {
+                mLayoutLeft.addGridList(SortActivity.this, currImgPath, new SortTypeLayout.IUpdateUIListener() {
+                    @Override
+                    public void setItem(Object o, ImageView img) {
+
+                        String path = (String) o;
+                        img.setTag(path);
+                        try {
+                            img.setImageBitmap(BitmapFactory.decodeStream(getAssets().open(path)));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+            getHostpic();
+
+        } else if (rightView!=null&&imgPath.contains(rightGroupName)){
+            try {
+                mLayoutRight.addGridList(SortActivity.this, currImgPath, new SortTypeLayout.IUpdateUIListener() {
+                    @Override
+                    public void setItem(Object o, ImageView img) {
+
+
+                        try {
+                            String path = (String) o;
+                            img.setTag(path);
+                            img.setImageBitmap(BitmapFactory.decodeStream(getAssets().open(path)));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                getHostpic();
+
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }else{
+
+            mTop=0;
+            mLeft=0;
+
+            setImageViewMargin(l,t);
+        }
     }
     /**
      * 动态设置控件的marginTop 和 marginLeft的值
@@ -172,6 +227,9 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
      */
     public void getHostpic() {
 
+        mTop=0;
+        mLeft=0;
+
         final Random random = new Random();
         final int index = random.nextInt(allPaths.size() - 1);
 
@@ -179,6 +237,7 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
         Log.d(TAG, "getHostpic: " + index + "---path=" + currImgPath);
 
         try {
+            mImage.setTag(currImgPath);
             mImage.setImageBitmap(BitmapFactory.decodeStream(getAssets().open(currImgPath)));
 
             setImageViewMargin(l,t);

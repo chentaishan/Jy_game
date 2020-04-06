@@ -43,7 +43,7 @@ public class SortTypeLayout extends LinearLayout {
     private int columnNum = 2;
     private static int imageWidth = 0;
     private LinearLayout rowLinearlayout;
-    int totalDividerWidth = 30 * 2;
+    int totalDividerWidth = 10 ;
 
 
     public void setGroupName(String name){
@@ -87,9 +87,6 @@ public class SortTypeLayout extends LinearLayout {
             throw new IllegalAccessException("请设置列数！");
         }
         this.iUpdateUIListener = iUpdateUIListener;
-        imageWidth = DensityUtil.getScreenWidth(context) - totalDividerWidth;
-        imageWidth = imageWidth / columnNum;
-        removeAllViews();
 
         listBeans.add(itempath);
         if (listBeans.size()==0){
@@ -108,7 +105,7 @@ public class SortTypeLayout extends LinearLayout {
                 rowLinearlayout = new LinearLayout(getContext());
                 rowLinearlayout.setOrientation(HORIZONTAL);
                 LayoutParams layout = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                layout.setMargins(0, 0, 0, 30);
+                layout.setMargins(0, 0, 0, 10);
                 rowLinearlayout.setLayoutParams(layout);
 
                 rowLinearlayout.addView(item);
@@ -123,7 +120,7 @@ public class SortTypeLayout extends LinearLayout {
 
                 //添加间隔线
                 View view = new View(getContext());
-                view.setLayoutParams(new LayoutParams(30, ViewGroup.LayoutParams.MATCH_PARENT));
+                view.setLayoutParams(new LayoutParams(10, ViewGroup.LayoutParams.MATCH_PARENT));
                 rowLinearlayout.addView(view);
                 rowLinearlayout.addView(item);
 
@@ -144,14 +141,10 @@ public class SortTypeLayout extends LinearLayout {
         ImageView imageView = item.findViewById(R.id.image);
 
         LayoutParams layoutParams = (LayoutParams) imageView.getLayoutParams();
-        layoutParams.width = imageWidth;
-        layoutParams.height = imageWidth;
+        layoutParams.width = (getWidth()-10)/2;
+        layoutParams.height = layoutParams.width;
 
-//        imageView.setBackgroundColor(Color.parseColor("#F0EBE9"));
         imageView.setLayoutParams(layoutParams);
-
-        TextView title = item.findViewById(R.id.title);
-
 
         iUpdateUIListener.setItem(t, imageView);
 
