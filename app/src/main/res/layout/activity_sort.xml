@@ -39,7 +39,7 @@
         android:id="@+id/image"
         android:layout_width="111dp"
         android:layout_height="111dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="center" />
 
 
 </RelativeLayout>

@@ -135,7 +135,7 @@ public class LikeActivity extends BaseActivity implements View.OnTouchListener {
             mTop = 0;
             mLeft = 0;
             l = DensityUtil.getScreenWidth(this) - layoutParams.width;
-            setImageViewMargin(l / 2, l / 2);
+            setImageViewMargin(l / 2, defaultHeight);
             setPicView(mImageView, mGridview);
 
         } else {

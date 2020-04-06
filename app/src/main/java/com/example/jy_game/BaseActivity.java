@@ -38,6 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected int mTop;
     protected int mLeft;
 
+    int defaultHeight=50;
 
     protected RelativeLayout.LayoutParams layoutParams;
 
@@ -65,22 +66,22 @@ public abstract class BaseActivity extends AppCompatActivity {
         layoutParams.height = mGridview.getImageItemWidth();
         mImageView.setLayoutParams(layoutParams);
 
-        TypedValue tv = new TypedValue();
-        int actionBarHeight = 0;
-        if (this.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, this.getResources().getDisplayMetrics());
-            Log.i(TAG, "------------actionBarHeight=" + actionBarHeight);
-        }
 
         l = DensityUtil.getScreenWidth(this) - layoutParams.width;
-        t = DensityUtil.getScreenHeight(this) - layoutParams.width - actionBarHeight;
+        t = DensityUtil.getScreenHeight(this) - layoutParams.width - getNavigationBarHeight()-30*2;
 
         Log.d(TAG, "onResume: " + t);
 
-        setImageViewMargin(l / 2, l / 2);
+        setImageViewMargin(l / 2, DensityUtil.dp2px(this,defaultHeight));
 
     }
+    private int getNavigationBarHeight() {
 
+        int resourceId = getResources().getIdentifier("navigation_bar_height","dimen", "android");
+        int height = getResources().getDimensionPixelSize(resourceId);
+        Log.v("dbw", "Navi height:" + height);
+        return height;
+    }
 
     /**
      * 获取随机数 和设置图片

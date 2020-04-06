@@ -1,5 +1,6 @@
 package com.example.jy_game;
 
+import android.animation.ValueAnimator;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -36,10 +37,12 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
     private int startY;
     private int mTop;
     private int mLeft;
-    // 默认左边距，顶部边距
-    private int l,t;
-    int defaultLeft = 111;
-    int defaultTop = 44;
+
+    int defaultTopDP=44;
+    int defaultHostWidthDP = 111;
+
+    int defaultLeftPX;
+    int defaultTopPX = 44;
 
     int maxLeftMargin;
     int maxTopMargin;
@@ -48,14 +51,14 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sort);
 
-        l = (DensityUtil.getScreenWidth(this)-DensityUtil.dp2px(this,defaultLeft))/2;
-        t = DensityUtil.dp2px(this,defaultTop);
+        defaultLeftPX = (DensityUtil.getScreenWidth(this)-DensityUtil.dp2px(this,defaultHostWidthDP))/2;
+        defaultTopPX = DensityUtil.dp2px(this,defaultTopDP);
 
-        maxLeftMargin = DensityUtil.getScreenWidth(this)-DensityUtil.dp2px(this,defaultLeft);
-        maxTopMargin = DensityUtil.getScreenHeight(this)-DensityUtil.dp2px(this,defaultLeft)-getNavigationBarHeight();
+        maxLeftMargin = DensityUtil.getScreenWidth(this)-DensityUtil.dp2px(this,defaultHostWidthDP);
+        maxTopMargin = DensityUtil.getScreenHeight(this)-DensityUtil.dp2px(this,defaultHostWidthDP)-getNavigationBarHeight();
 
 
-        Log.d(TAG, "onCreate: l="+l+"  t="+t);
+
         initView();
 
         getGroupName();
@@ -172,10 +175,10 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
             }
         }else{
 
-            mTop=0;
-            mLeft=0;
-
-            setImageViewMargin(l,t);
+//            mTop=0;
+//            mLeft=0;
+            anim();
+//            setImageViewMargin(l,t);
         }
     }
     /**
@@ -240,7 +243,7 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
             mImage.setTag(currImgPath);
             mImage.setImageBitmap(BitmapFactory.decodeStream(getAssets().open(currImgPath)));
 
-            setImageViewMargin(l,t);
+            setImageViewMargin(defaultLeftPX,defaultTopPX);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -271,7 +274,34 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
 
 
     }
+    public void anim() {
 
+        Log.d(TAG, "anim: mTop="+mTop+"----defaTop="+defaultTopPX);
+
+        ValueAnimator valueAnimator1 = ValueAnimator.ofInt(mTop, defaultTopPX);
+
+        valueAnimator1.setDuration(500);
+
+        valueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (int) animation.getAnimatedValue();
+                Log.d(TAG, "anim: value=" + value);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImage.getLayoutParams();
+                layoutParams.topMargin = value;
+                int progress = (value - defaultTopPX) * 100 / (mTop - defaultTopPX);
+                Log.d(TAG, "anim: progress=" + progress);
+                layoutParams.leftMargin = (mLeft - defaultLeftPX) * progress / 100 + defaultLeftPX;
+                Log.d(TAG, "anim: leftMargin=" + layoutParams.leftMargin);
+
+
+                mImage.setLayoutParams(layoutParams);
+            }
+        });
+
+
+        valueAnimator1.start();
+    }
     /**
      * 如果组名里不包含"-"，证明是有异常
      * @param groupname
