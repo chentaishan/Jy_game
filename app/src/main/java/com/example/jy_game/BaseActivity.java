@@ -3,24 +3,30 @@ package com.example.jy_game;
 import android.animation.ValueAnimator;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Locale;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+
+import static android.speech.tts.TextToSpeech.Engine.KEY_PARAM_VOLUME;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected TextView mName;
     protected ImageView mImageView;
     protected MySelfGridView mGridview;
-     String[] drawablePaths ;
+    String[] drawablePaths;
     int l, t;
 
     String hostDrawable;
@@ -33,16 +39,16 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected int mLeft;
 
 
-
     protected RelativeLayout.LayoutParams layoutParams;
 
-    private final String TAG =  getClass().getSimpleName();
+    private final String TAG = getClass().getSimpleName();
+    protected TextToSpeech tts;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         drawablePaths = new String[6];
-
 
 
     }
@@ -68,7 +74,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         l = DensityUtil.getScreenWidth(this) - layoutParams.width;
         t = DensityUtil.getScreenHeight(this) - layoutParams.width
-                - actionBarHeight ;
+                - actionBarHeight;
 
         Log.d(TAG, "onResume: " + t);
 
@@ -85,12 +91,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         //清除数组
 
         for (int i = 0; i < drawablePaths.length; i++) {
-            drawablePaths[i]="";
+            drawablePaths[i] = "";
         }
 
         getEachHostPic();
         getEachPageList();
-
 
 
     }
@@ -100,6 +105,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
 
     protected abstract void getEachHostPic();
+
     /**
      * 获取每个页面的要对比的图片集合
      */
@@ -134,6 +140,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         layoutParams.leftMargin = left;
         mImageView.setLayoutParams(layoutParams);
     }
+
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -181,7 +188,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void ifSame(View view);
 
 
-
     protected void setPicView(ImageView mImageView, MySelfGridView mGridview) {
 
         try {
@@ -209,13 +215,14 @@ public abstract class BaseActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    public void anim(){
 
-        final int yuan = l/2;
-        Log.d(TAG, "anim: "+yuan+"  top="+mTop+"   mLeft="+mLeft);
+    public void anim() {
+
+        final int yuan = l / 2;
+        Log.d(TAG, "anim: " + yuan + "  top=" + mTop + "   mLeft=" + mLeft);
 
         // 指示器旋转
-        ValueAnimator valueAnimator1 = ValueAnimator.ofInt( mTop,yuan);
+        ValueAnimator valueAnimator1 = ValueAnimator.ofInt(mTop, yuan);
 
         valueAnimator1.setDuration(500);
 
@@ -223,13 +230,13 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 int value = (int) animation.getAnimatedValue();
-                Log.d(TAG, "anim: value="+value );
+                Log.d(TAG, "anim: value=" + value);
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImageView.getLayoutParams();
                 layoutParams.topMargin = value;
-                int progress = (value-yuan)*100/(mTop-yuan);
-                Log.d(TAG, "anim: progress="+progress );
-                layoutParams.leftMargin= (mLeft-yuan)*progress/100+yuan;
-                Log.d(TAG, "anim: leftMargin="+ layoutParams.leftMargin );
+                int progress = (value - yuan) * 100 / (mTop - yuan);
+                Log.d(TAG, "anim: progress=" + progress);
+                layoutParams.leftMargin = (mLeft - yuan) * progress / 100 + yuan;
+                Log.d(TAG, "anim: leftMargin=" + layoutParams.leftMargin);
 
 
                 mImageView.setLayoutParams(layoutParams);
@@ -238,5 +245,29 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
         valueAnimator1.start();
+    }
+
+    public void initSound() {
+        //初始化TTS
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                // 判断是否转化成功
+                if (status == TextToSpeech.SUCCESS){
+                    //默认设定语言为中文，原生的android貌似不支持中文。
+                    int result = tts.setLanguage(Locale.SIMPLIFIED_CHINESE);
+
+                    Log.d(TAG, "onInit: "+result);
+                }
+            }
+        });
+
+
+    }
+
+    public void talkSound(String text){
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+
+
     }
 }

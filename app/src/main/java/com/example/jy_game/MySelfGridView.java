@@ -2,7 +2,6 @@ package com.example.jy_game;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,22 +10,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
-import androidx.annotation.Nullable;
-
 public class MySelfGridView extends LinearLayout {
     public MySelfGridView(Context context) {
         super(context);
         setOrientation(VERTICAL);
     }
 
-    public MySelfGridView(Context context, @Nullable AttributeSet attrs) {
+    public MySelfGridView(Context context,  AttributeSet attrs) {
         super(context, attrs);
         setOrientation(VERTICAL);
     }
 
-    public MySelfGridView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public MySelfGridView(Context context,  AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setOrientation(VERTICAL);
     }

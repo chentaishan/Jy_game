@@ -1,6 +1,5 @@
 package com.example.jy_game;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;

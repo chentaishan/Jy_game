@@ -1,14 +1,15 @@
 package com.example.jy_game;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
-import androidx.annotation.Nullable;
 
-public class SlideImage extends androidx.appcompat.widget.AppCompatImageView {
+public class SlideImage extends AppCompatImageView {
     public SlideImage(Context context) {
         super(context);
     }

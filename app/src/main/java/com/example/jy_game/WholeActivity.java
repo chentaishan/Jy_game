@@ -23,6 +23,7 @@ public class WholeActivity extends BaseActivity implements View.OnTouchListener 
         setContentView(R.layout.activity_whole);
 
 
+        initSound();
         initView();
     }
 
@@ -89,6 +90,7 @@ public class WholeActivity extends BaseActivity implements View.OnTouchListener 
         if (view != null&&hostDrawable.equals(view.getTag())) {
 
 
+            talkSound("哎呦，不错");
             Toast.makeText(this, "哎呦，不错哦！", Toast.LENGTH_SHORT).show();
 
             getRandomNum();
@@ -101,6 +103,7 @@ public class WholeActivity extends BaseActivity implements View.OnTouchListener 
         } else {
 
             anim();
+            talkSound("不对啊");
             Toast.makeText(this, "不对啊！", Toast.LENGTH_SHORT).show();
         }
     }
