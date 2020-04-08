@@ -1,10 +1,15 @@
 package com.example.jy_game;
 
 import android.animation.ValueAnimator;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
@@ -16,9 +21,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.io.IOException;
 import java.util.Locale;
 
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 import static android.speech.tts.TextToSpeech.Engine.KEY_PARAM_VOLUME;
 
@@ -189,24 +198,44 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract void ifSame(View view);
 
-
+    /**
+     * 高斯模糊值
+     */
+    protected int gaussianBlurValue=0;
     protected void setPicView(ImageView mImageView, MySelfGridView mGridview) {
 
         try {
-            mImageView.setImageBitmap(BitmapFactory.decodeStream(getAssets().open(hostDrawable)));
+
+
+            final Bitmap bitmap = BitmapFactory.decodeStream(getAssets().open(hostDrawable));
+//            Imageutils.blurBitmap(this,bitmap,11f)
+
+            mImageView.setImageBitmap(bitmap);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
             mGridview.initGridList(this, drawablePaths, new MySelfGridView.IUpdateUIListener() {
+                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                 @Override
                 public void setItem(Object o, ImageView img) {
 
                     String path = (String) o;
                     try {
                         img.setTag(path);
-                        img.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open(path)));
+                        Bitmap  bitmap = BitmapFactory.decodeStream(getResources().getAssets().open(path));
+                        if (gaussianBlurValue!=0&&!path.equals(hostDrawable)){
+
+
+                            String tint = Imageutils.backGroudhint(gaussianBlurValue);
+                            ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor(tint));
+                            img.setImageTintList(colorStateList );
+                        }
+
+
+                        img.setImageBitmap(bitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -99,7 +99,7 @@ public class DensityUtil {
     private static View getTouchTarget(View view, int x, int y) {
         View targetView = null;
 
-            if (viewisInLayout(view, x, y)) {
+            if (isTouchPointInView(view, x, y)) {
                 targetView = view;
 
             }
@@ -135,15 +135,23 @@ public class DensityUtil {
         return false;
     }
 
+    /**
+     * 添加item 到layout
+     * @param view
+     * @param x
+     * @param y
+     * @return
+     */
     public static View addItem2layout(View view, int x, int y){
 
-        if (view instanceof SortTypeLayout) {
-           return getTouchTarget(view, x, y);
+        if (view instanceof SortTypeLayout&&viewisInLayout(view, x, y)) {
+           return view;
         }
         return null;
     }
-    private static boolean viewisInLayout(View layout, int x, int y) {
 
+
+    private static boolean viewisInLayout(View layout, int x, int y) {
 
 
         int[] location = new int[2];

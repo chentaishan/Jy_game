@@ -85,6 +85,8 @@ public class WholeActivity extends BaseActivity implements View.OnTouchListener 
     protected void ifSame(View view) {
         if (view==null){
             anim();
+            gaussianBlurValue+=2;
+            mGridview.refreshImageView(hostDrawable,gaussianBlurValue);
             return;
         }
         if (view != null&&hostDrawable.equals(view.getTag())) {
@@ -104,6 +106,8 @@ public class WholeActivity extends BaseActivity implements View.OnTouchListener 
 
             anim();
             talkSound("不对啊");
+            gaussianBlurValue+=2;
+            mGridview.refreshImageView(hostDrawable,gaussianBlurValue);
             Toast.makeText(this, "不对啊！", Toast.LENGTH_SHORT).show();
         }
     }

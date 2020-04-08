@@ -2,6 +2,9 @@ package com.example.jy_game;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.io.IOException;
 
 public class MySelfGridView extends LinearLayout {
     public MySelfGridView(Context context) {
@@ -105,10 +110,7 @@ public class MySelfGridView extends LinearLayout {
         layoutParams.width = imageWidth;
         layoutParams.height = imageWidth;
 
-//        imageView.setBackgroundColor(Color.parseColor("#F0EBE9"));
         imageView.setLayoutParams(layoutParams);
-
-        TextView title = item.findViewById(R.id.title);
 
 
         iUpdateUIListener.setItem(t, imageView );
@@ -116,20 +118,57 @@ public class MySelfGridView extends LinearLayout {
 
         return item;
     }
+    float gaussianBlurValue;
+    public void refreshImageView(String path,float gaussianBlurValue){
+        this.gaussianBlurValue = gaussianBlurValue;
+        if (this.gaussianBlurValue==0){
+            return;
+        }
+        if (!TextUtils.isEmpty(path)){
+            for (int i = 0; i < getChildCount(); i++) {
+                View item = getChildAt(i);
+                if (item instanceof ViewGroup){
+                    findImageViewByGroup((ViewGroup) item,path);
+                }
+
+            }
+        }
+
+
+    }
+
+    private void findImageViewByGroup(ViewGroup viewGroup,String path) {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View item = viewGroup.getChildAt(i);
+            if (item instanceof ImageView){
+
+                ImageView img = (ImageView) item;
+                final  String p = (String) img.getTag();
+                if (gaussianBlurValue!=0&&!p.equals(path)){
+
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = BitmapFactory.decodeStream(getResources().getAssets().open(p));
+                        bitmap = Imageutils.blurBitmap(getContext(),bitmap,gaussianBlurValue);
+                        img.setImageBitmap(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }else if(item instanceof ViewGroup){
+                findImageViewByGroup(viewGroup,path);
+            }
+        }
+
+    }
 
     IUpdateUIListener iUpdateUIListener;
 
     public interface IUpdateUIListener<T> {
 
         void setItem(T t, ImageView img);
-    }
-
-    class ViewHolder {
-        ImageView imageView;
-
-        public ViewHolder(View item) {
-            imageView = item.findViewById(R.id.image);
-        }
     }
 
 
