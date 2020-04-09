@@ -226,13 +226,13 @@ public abstract class BaseActivity extends AppCompatActivity {
                     try {
                         img.setTag(path);
                         Bitmap  bitmap = BitmapFactory.decodeStream(getResources().getAssets().open(path));
-                        if (gaussianBlurValue!=0&&!path.equals(hostDrawable)){
-
-
-                            String tint = Imageutils.backGroudhint(gaussianBlurValue);
-                            ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor(tint));
-                            img.setImageTintList(colorStateList );
-                        }
+//                        if (gaussianBlurValue!=0&&!path.equals(hostDrawable)){
+//
+//
+//                            String tint = Imageutils.backGroudhint(gaussianBlurValue);
+//                            ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor(tint));
+//                            img.setImageTintList(colorStateList );
+//                        }
 
 
                         img.setImageBitmap(bitmap);

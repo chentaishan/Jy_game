@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/name"
             android:layout_marginTop="33dp"
-            android:tint="#99ffffff"
+
             android:scaleType="centerCrop"
              />
 

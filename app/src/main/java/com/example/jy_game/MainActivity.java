@@ -3,10 +3,14 @@ package com.example.jy_game;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,6 +18,10 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -44,10 +52,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.option_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.setting:
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initView() {
-
 
         mGridview = findViewById(R.id.gridview);
         mGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -80,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
                         intent = new Intent(MainActivity.this, PictureActivity.class);
 
                         startActivity(intent);
+
+
                         break;
                     case 5:
                         intent = new Intent(MainActivity.this, SortActivity.class);

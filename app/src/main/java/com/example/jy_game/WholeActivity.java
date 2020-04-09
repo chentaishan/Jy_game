@@ -1,6 +1,8 @@
 package com.example.jy_game;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -81,6 +83,7 @@ public class WholeActivity extends BaseActivity implements View.OnTouchListener 
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void ifSame(View view) {
         if (view==null){
@@ -98,6 +101,7 @@ public class WholeActivity extends BaseActivity implements View.OnTouchListener 
             getRandomNum();
             mTop =0;
             mLeft =0;
+            gaussianBlurValue=0;
             l = DensityUtil.getScreenWidth(this) - layoutParams.width;
             setImageViewMargin(defaultLeft, DensityUtil.dp2px(this,defaultHeight));
             setPicView(mImageView,mGridview);

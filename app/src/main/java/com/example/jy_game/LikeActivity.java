@@ -3,7 +3,9 @@ package com.example.jy_game;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -114,11 +116,14 @@ public class LikeActivity extends BaseActivity implements View.OnTouchListener {
         return false;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void ifLike(View view) {
 
         if (view==null){
             anim();
+            gaussianBlurValue+=2;
+            mGridview.refreshNOLikeImageView(hostDrawable,gaussianBlurValue);
             return;
         }
         Log.d(TAG, "ifLike: "+view);
@@ -134,6 +139,7 @@ public class LikeActivity extends BaseActivity implements View.OnTouchListener {
             getRandomNum();
             mTop = 0;
             mLeft = 0;
+            gaussianBlurValue=0;
             l = DensityUtil.getScreenWidth(this) - layoutParams.width;
             setImageViewMargin(defaultLeft, DensityUtil.dp2px(this,defaultHeight));
             setPicView(mImageView, mGridview);
@@ -141,7 +147,8 @@ public class LikeActivity extends BaseActivity implements View.OnTouchListener {
         } else {
 
             anim();
-
+            gaussianBlurValue+=2;
+            mGridview.refreshNOLikeImageView(hostDrawable,gaussianBlurValue);
             Toast.makeText(this, "不对啊！", Toast.LENGTH_SHORT).show();
         }
     }

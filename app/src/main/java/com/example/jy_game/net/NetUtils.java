@@ -1,15 +1,20 @@
 package com.example.jy_game.net;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.util.Log;
 
 import com.example.jy_game.MyApp;
 import com.example.jy_game.TranslationBean;
 
+import java.io.IOException;
 import java.util.List;
 
 import okhttp3.Cache;
+import okhttp3.CacheControl;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,6 +27,7 @@ public class NetUtils {
     public static void  getNetData( String name, final CallBack callBack){
 
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addNetworkInterceptor(new NetWorkInterceptor())
                 .cache(new Cache(MyApp.context.getCacheDir(),1024*1024*10)).build();
 
         Log.d(TAG, "getNetData: "+name);
@@ -69,5 +75,41 @@ public class NetUtils {
         });
 
     }
+    static class NetWorkInterceptor implements Interceptor {
+        Request request;
+        @Override
+        public okhttp3.Response intercept(Chain chain) throws IOException {
 
+            request = chain.request();
+            if (! checkNetWork()){
+
+                request.newBuilder().cacheControl(CacheControl.FORCE_CACHE).build();
+            }
+
+            okhttp3.Response response = chain.proceed(request);
+            if (! checkNetWork()){
+
+                int maxAge=0;
+                return  response.newBuilder().removeHeader("Pragma").header("Cache-Control","public ,max-age="+maxAge).build();
+
+            }else{
+
+                int maxTime = 60*60 *24;
+
+                return  response.newBuilder().removeHeader("Pragma").header("Cache-Control","public ,max-age="+maxTime).build();
+
+            }
+
+
+        }
+    }
+
+    /**
+     * 检查是否有网络
+     * @return
+     */
+    public static boolean checkNetWork(){
+        ConnectivityManager manager = (ConnectivityManager) MyApp.context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return manager.getActiveNetworkInfo() != null;
+    }
 }

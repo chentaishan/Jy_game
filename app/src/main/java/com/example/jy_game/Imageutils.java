@@ -13,13 +13,17 @@ public class Imageutils {
 
     static String backStart="#";
     static String backEnd="ffffff";
-    static int baseNum=22;
+    static int baseNum=11;
 
     public static String backGroudhint(int count){
 
         if (count==0){
             return "";
         }
+        if (count>=9){
+           count=9;
+        }
+
         int alpha = count*baseNum;
 
 

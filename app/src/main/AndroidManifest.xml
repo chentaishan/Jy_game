@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.jy_game">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -16,6 +17,7 @@
         <activity android:name=".SortActivity"></activity>
         <activity android:name=".PictureActivity" />
         <activity android:name=".ExpressiveActivity" />
+        <activity android:name=".SettingActivity" />
         <activity android:name=".ReceptiveActivity" />
         <activity android:name=".LikeActivity" />
         <activity android:name=".WholeActivity" />
