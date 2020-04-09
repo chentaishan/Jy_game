@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".WholeActivity">
 
-    <com.example.jy_game.MySelfGridView
+    <com.example.jy_game.view.MySelfGridView
         android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

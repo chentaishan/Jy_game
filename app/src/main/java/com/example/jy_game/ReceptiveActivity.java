@@ -12,20 +12,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.jy_game.net.ApiService;
 import com.example.jy_game.net.CallBack;
 import com.example.jy_game.net.NetUtils;
+import com.example.jy_game.view.MySelfGridView;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * 听声辨物

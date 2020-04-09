@@ -1,4 +1,4 @@
-package com.example.jy_game;
+package com.example.jy_game.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,12 +12,17 @@ import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.jy_game.DensityUtil;
+import com.example.jy_game.Imageutils;
+import com.example.jy_game.R;
 
 import java.io.IOException;
 
@@ -69,9 +74,20 @@ public class MySelfGridView extends LinearLayout {
         if (columnNum == 0) {
             throw new IllegalAccessException("请设置列数！");
         }
+        switch (listBeans.length ){
+            case 5:
+            case 6:
+                setColumnNum(3);
+                break;
+           default:
+                setColumnNum(2);
+                break;
+
+        }
+
         this.iUpdateUIListener = iUpdateUIListener;
         imageWidth = DensityUtil.getScreenWidth(context) - totalDividerWidth;
-        imageWidth = imageWidth / columnNum;
+        imageWidth = imageWidth / 3;
         removeAllViews();
         for (int i = 0; i < listBeans.length; i++) {
 
@@ -82,7 +98,8 @@ public class MySelfGridView extends LinearLayout {
             if (i % columnNum == 0) {
                 rowLinearlayout = new LinearLayout(getContext());
                 rowLinearlayout.setOrientation(HORIZONTAL);
-                LayoutParams layout = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                LayoutParams layout = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layout.gravity= Gravity.CENTER_HORIZONTAL;
                 layout.setMargins(0, 0, 0, 30);
                 rowLinearlayout.setLayoutParams(layout);
 
