@@ -48,7 +48,7 @@ public class WholeActivity extends BaseActivity implements View.OnTouchListener 
         hostDrawable = MyApp.stringList.get(currPic);
 
         final Random random = new Random();
-        final int index = random.nextInt(10000)%(maxPics);
+        final int index = random.nextInt(maxPics-1);
         Log.d(TAG, "当前主图片随机插位: "+index);
         drawablePaths[index]=hostDrawable;
 

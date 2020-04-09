@@ -50,7 +50,7 @@ public class SpUtils {
     }
 
     public int getInt(String key){
-        return sp.getInt(key,0);
+        return sp.getInt(key,6);
     }
 
     public Boolean getBoolean(String key){

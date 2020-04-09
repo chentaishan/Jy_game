@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.jy_game.utils.SpUtils;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -30,6 +31,7 @@ import java.util.Locale;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 import static android.speech.tts.TextToSpeech.Engine.KEY_PARAM_VOLUME;
+import static com.example.jy_game.utils.Constants.PIC_NUM;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected TextView mName;
@@ -40,7 +42,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     String hostDrawable;
 
-    int maxPics = 6;
+    int maxPics = 1;
 
     protected int startX = 0;
     protected int startY = 0;
@@ -59,7 +61,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        drawablePaths = new String[6];
+        maxPics = SpUtils.getInstance().getInt(PIC_NUM);
+        drawablePaths = new String[maxPics];
 
 
     }
