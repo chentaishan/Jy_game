@@ -32,12 +32,12 @@ public class MySelfGridView extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public MySelfGridView(Context context,  AttributeSet attrs) {
+    public MySelfGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOrientation(VERTICAL);
     }
 
-    public MySelfGridView(Context context,  AttributeSet attrs, int defStyleAttr) {
+    public MySelfGridView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setOrientation(VERTICAL);
     }
@@ -74,12 +74,12 @@ public class MySelfGridView extends LinearLayout {
         if (columnNum == 0) {
             throw new IllegalAccessException("请设置列数！");
         }
-        switch (listBeans.length ){
+        switch (listBeans.length) {
             case 5:
             case 6:
                 setColumnNum(3);
                 break;
-           default:
+            default:
                 setColumnNum(2);
                 break;
 
@@ -99,7 +99,7 @@ public class MySelfGridView extends LinearLayout {
                 rowLinearlayout = new LinearLayout(getContext());
                 rowLinearlayout.setOrientation(HORIZONTAL);
                 LayoutParams layout = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                layout.gravity= Gravity.CENTER_HORIZONTAL;
+                layout.gravity = Gravity.CENTER_HORIZONTAL;
                 layout.setMargins(0, 0, 0, 30);
                 rowLinearlayout.setLayoutParams(layout);
 
@@ -119,7 +119,8 @@ public class MySelfGridView extends LinearLayout {
         }
 
     }
-    private <T>View initItemView(T t){
+
+    private <T> View initItemView(T t) {
         //获取子布局，设置宽度 高度
 
         View item = LayoutInflater.from(getContext()).inflate(R.layout.category_goods_item, null);
@@ -136,23 +137,25 @@ public class MySelfGridView extends LinearLayout {
         imageView.setLayoutParams(layoutParams);
 
 
-        iUpdateUIListener.setItem(t, imageView );
+        iUpdateUIListener.setItem(t, imageView);
 
 
         return item;
     }
+
     int gaussianBlurValue;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void refreshImageView(String path, int gaussianBlurValue){
+    public void refreshImageView(String path, int gaussianBlurValue) {
         this.gaussianBlurValue = gaussianBlurValue;
-        if (this.gaussianBlurValue==0){
+        if (this.gaussianBlurValue == 0) {
             return;
         }
-        if (!TextUtils.isEmpty(path)){
+        if (!TextUtils.isEmpty(path)) {
             for (int i = 0; i < getChildCount(); i++) {
                 View item = getChildAt(i);
-                if (item instanceof ViewGroup){
-                    findImageViewByGroup((ViewGroup) item,path);
+                if (item instanceof ViewGroup) {
+                    findImageViewByGroup((ViewGroup) item, path);
                 }
 
             }
@@ -160,17 +163,18 @@ public class MySelfGridView extends LinearLayout {
 
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void refreshNOLikeImageView(String path, int gaussianBlurValue){
+    public void refreshNOLikeImageView(String path, int gaussianBlurValue) {
         this.gaussianBlurValue = gaussianBlurValue;
-        if (this.gaussianBlurValue==0){
+        if (this.gaussianBlurValue == 0) {
             return;
         }
-        if (!TextUtils.isEmpty(path)){
+        if (!TextUtils.isEmpty(path)) {
             for (int i = 0; i < getChildCount(); i++) {
                 View item = getChildAt(i);
-                if (item instanceof ViewGroup){
-                    findImageViewNOLikeByGroup((ViewGroup) item,path);
+                if (item instanceof ViewGroup) {
+                    findImageViewNOLikeByGroup((ViewGroup) item, path);
                 }
 
             }
@@ -178,17 +182,18 @@ public class MySelfGridView extends LinearLayout {
 
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void findImageViewNOLikeByGroup(ViewGroup viewGroup, String path) {
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View item = viewGroup.getChildAt(i);
-            if (item instanceof ImageView){
+            if (item instanceof ImageView) {
 
                 ImageView img = (ImageView) item;
-                final  String p = (String) img.getTag();
-                if (gaussianBlurValue!=0&&!p.substring(0,p.lastIndexOf("/")).equals(path.substring(0,path.lastIndexOf("/")))){
+                final String p = (String) img.getTag();
+                if (gaussianBlurValue != 0 && !p.substring(0, p.lastIndexOf("/")).equals(path.substring(0, path.lastIndexOf("/")))) {
                     try {
-                        Bitmap  bitmap = BitmapFactory.decodeStream(getResources().getAssets().open(p));
+                        Bitmap bitmap = BitmapFactory.decodeStream(getResources().getAssets().open(p));
                         img.setImageDrawable(new ColorDrawable());
                         img.setImageBitmap(bitmap);
                     } catch (IOException e) {
@@ -198,33 +203,34 @@ public class MySelfGridView extends LinearLayout {
 
                     String tint = Imageutils.backGroudhint(gaussianBlurValue);
 
-                    Log.d(TAG, "findImageViewByGroup: "+tint);
+                    Log.d(TAG, "findImageViewByGroup: " + tint);
 
                     ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor(tint));
-                    img.setColorFilter(Color.parseColor(tint) );
-
+                    img.setColorFilter(Color.parseColor(tint));
 
 
                 }
 
-            }else if(item instanceof ViewGroup){
-                findImageViewNOLikeByGroup(viewGroup,path);
+            } else if (item instanceof ViewGroup) {
+                findImageViewNOLikeByGroup(viewGroup, path);
             }
         }
 
     }
+
     private static final String TAG = "MySelfGridView";
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void findImageViewByGroup(ViewGroup viewGroup, String path) {
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View item = viewGroup.getChildAt(i);
-            if (item instanceof ImageView){
+            if (item instanceof ImageView) {
 
                 ImageView img = (ImageView) item;
-                final  String p = (String) img.getTag();
-                if (gaussianBlurValue!=0&&!p.equals(path)){
+                final String p = (String) img.getTag();
+                if (gaussianBlurValue != 0 && !p.equals(path)) {
                     try {
-                        Bitmap  bitmap = BitmapFactory.decodeStream(getResources().getAssets().open(p));
+                        Bitmap bitmap = BitmapFactory.decodeStream(getResources().getAssets().open(p));
                         img.setImageDrawable(new ColorDrawable());
                         img.setImageBitmap(bitmap);
                     } catch (IOException e) {
@@ -232,19 +238,18 @@ public class MySelfGridView extends LinearLayout {
                     }
 
 
-                        String tint = Imageutils.backGroudhint(gaussianBlurValue);
+                    String tint = Imageutils.backGroudhint(gaussianBlurValue);
 
-                        Log.d(TAG, "findImageViewByGroup: "+tint);
+                    Log.d(TAG, "findImageViewByGroup: " + tint);
 
-                        ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor(tint));
-                        img.setColorFilter(Color.parseColor(tint) );
-
+                    ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor(tint));
+                    img.setColorFilter(Color.parseColor(tint));
 
 
                 }
 
-            }else if(item instanceof ViewGroup){
-                findImageViewByGroup(viewGroup,path);
+            } else if (item instanceof ViewGroup) {
+                findImageViewByGroup(viewGroup, path);
             }
         }
 

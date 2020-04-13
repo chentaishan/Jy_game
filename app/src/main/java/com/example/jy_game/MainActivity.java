@@ -19,6 +19,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.jy_game.net.NetUtils;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        NetUtils.getImagelist();
+
         initView();
 
 
