@@ -75,6 +75,7 @@ public class ImageTask implements Runnable {
 
             }
             String imgUrls = SpUtils.getInstance().getString(IMGS_SP_KEY);
+            imgUrls = imgUrls+fileName+",";
             SpUtils.getInstance().setValue(IMGS_SP_KEY, imgUrls);
         } catch (IOException e) {
             e.printStackTrace();
