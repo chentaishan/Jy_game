@@ -3,15 +3,24 @@ package com.example.jy_game;
 import android.animation.ValueAnimator;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.jy_game.view.SortTypeLayout;
 
@@ -19,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -47,6 +57,10 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
 
     int maxLeftMargin;
     int maxTopMargin;
+    private TextToSpeech tts;
+    private final int END_NEXT = 1;
+    private final int RETRY_NEXT = 2;
+    private PopupWindow popupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +73,7 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
         maxLeftMargin = DensityUtil.getScreenWidth(this) - DensityUtil.dp2px(this, defaultHostWidthDP);
         maxTopMargin = DensityUtil.getScreenHeight(this) - DensityUtil.dp2px(this, defaultHostWidthDP) - getNavigationBarHeight();
 
-
+        initSound();
         initView();
 
         getGroupName();
@@ -77,6 +91,16 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
         return height;
     }
 
+    public void initPop(String msg) {
+
+        View root = LayoutInflater.from(this).inflate(R.layout.pop_item, null);
+        popupWindow = new PopupWindow(root, ViewGroup.LayoutParams.MATCH_PARENT, 200);
+
+        TextView title = root.findViewById(R.id.tips);
+        title.setText(msg);
+        popupWindow.showAtLocation(mImage, Gravity.CENTER, 0, 0);
+
+    }
 
 
     public boolean onTouch(View v, MotionEvent event) {
@@ -117,6 +141,32 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
         return true;
     }
 
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (popupWindow != null) {
+                popupWindow.dismiss();
+            }
+            // 重置数据
+            switch (msg.what) {
+                case END_NEXT:
+                    mLayoutLeft.reset();
+                    mLayoutRight.reset();
+
+                    getGroupName();
+                    getGroup_subFile();
+                    getHostpic();
+
+                    setGroupname();
+                    break;
+                case RETRY_NEXT:
+                    break;
+            }
+
+        }
+    };
+
     private void addItem2Layout(ImageView mImage, int left, int top) {
 
         final View leftView = DensityUtil.addItem2layout(mLayoutLeft, left, top);
@@ -135,6 +185,19 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
 
                         img.setImageBitmap(BitmapFactory.decodeFile(path));
 
+                        int count = mLayoutLeft.getCount();
+
+                        if (count == 6) {
+                            //   提示 语音  TODO 重置
+
+                            String msg = "好棒";
+                            initPop(msg);
+                            talkSound(msg);
+                            Message message = new Message();
+                            message.what = END_NEXT;
+                            handler.sendMessageDelayed(message, 1000);
+
+                        }
                     }
                 });
             } catch (IllegalAccessException e) {
@@ -150,11 +213,22 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
                     public void setItem(Object o, ImageView img) {
 
 
+                        String path = (String) o;
+                        img.setTag(path);
+                        img.setImageBitmap(BitmapFactory.decodeFile(path));
 
-                            String path = (String) o;
-                            img.setTag(path);
-                            img.setImageBitmap(BitmapFactory.decodeFile(path));
+                        int count = mLayoutRight.getCount();
+                        if (count == 6) {
+                            //   提示 语音  TODO 重置
 
+                            String msg = "好棒";
+                            initPop(msg);
+                            talkSound(msg);
+                            Message message = new Message();
+                            message.what = END_NEXT;
+                            handler.sendMessageDelayed(message, 1000);
+
+                        }
                     }
                 });
                 getHostpic();
@@ -167,8 +241,38 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
 //            mTop=0;
 //            mLeft=0;
             anim();
+            String msg = "不对哦";
+            initPop(msg);
+            talkSound(msg);
+            Message message = new Message();
+            message.what = RETRY_NEXT;
+            handler.sendMessageDelayed(message, 500);
 //            setImageViewMargin(l,t);
         }
+    }
+
+    public void initSound() {
+        //初始化TTS
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                // 判断是否转化成功
+                if (status == TextToSpeech.SUCCESS) {
+                    //默认设定语言为中文，原生的android貌似不支持中文。
+                    int result = tts.setLanguage(Locale.SIMPLIFIED_CHINESE);
+
+                    Log.d(TAG, "onInit: " + result);
+                }
+            }
+        });
+
+
+    }
+
+    public void talkSound(String text) {
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+
+
     }
 
     /**
@@ -242,26 +346,40 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
 
     protected void getGroupName() {
 
-        try {
+
+        final File[] list = MyApp.getFiledir().listFiles();
+        final Random random = new Random();
+        final int leftIndex = random.nextInt(list.length);
+        int rightIndex = random.nextInt(list.length);
+        if (leftIndex == rightIndex) {
+            rightIndex = random.nextInt(list.length);
+        }
+        leftGroupName = list[leftIndex].getName();
+        rightGroupName = list[rightIndex].getName();
+
+        leftGroupName = checkGroupName(leftGroupName);
+        rightGroupName = checkGroupName(rightGroupName);
+
+
+    }
+
+    /**
+     * 如果组名里不包含"-"，证明是有异常
+     *
+     * @param groupname
+     * @return
+     * @throws IOException
+     */
+    public String checkGroupName(String groupname) {
+        Log.d(TAG, "checkGroupName: " + groupname);
+        if (!groupname.contains("-")) {
             final File[] list = MyApp.getFiledir().listFiles();
             final Random random = new Random();
-            final int leftIndex = random.nextInt(list.length);
-            int rightIndex = random.nextInt(list.length);
-            if (leftIndex == rightIndex) {
-                rightIndex = random.nextInt(list.length);
-            }
-            leftGroupName = list[leftIndex].getName();
-            rightGroupName = list[rightIndex].getName();
-
-            leftGroupName = checkGroupName(leftGroupName);
-            rightGroupName = checkGroupName(rightGroupName);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
+            final int index = random.nextInt(list.length);
+            groupname = list[index].getName();
+            return checkGroupName(groupname);
         }
-
-
+        return groupname;
     }
 
     public void anim() {
@@ -279,10 +397,13 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
                 Log.d(TAG, "anim: value=" + value);
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImage.getLayoutParams();
                 layoutParams.topMargin = value;
-                int progress = (value - defaultTopPX) * 100 / (mTop - defaultTopPX);
-                Log.d(TAG, "anim: progress=" + progress);
-                layoutParams.leftMargin = (mLeft - defaultLeftPX) * progress / 100 + defaultLeftPX;
-                Log.d(TAG, "anim: leftMargin=" + layoutParams.leftMargin);
+                if (value - defaultTopPX>0){
+
+                    int progress = (value - defaultTopPX) * 100 / (mTop - defaultTopPX);
+                    Log.d(TAG, "anim: progress=" + progress);
+                    layoutParams.leftMargin = (mLeft - defaultLeftPX) * progress / 100 + defaultLeftPX;
+                    Log.d(TAG, "anim: leftMargin=" + layoutParams.leftMargin);
+                }
 
 
                 mImage.setLayoutParams(layoutParams);
@@ -293,41 +414,21 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
         valueAnimator1.start();
     }
 
-    /**
-     * 如果组名里不包含"-"，证明是有异常
-     *
-     * @param groupname
-     * @return
-     * @throws IOException
-     */
-    public String checkGroupName(String groupname) throws IOException {
-        Log.d(TAG, "checkGroupName: " + groupname);
-        if (!groupname.contains("-")) {
-            final String[] list = getAssets().list("");
-            final Random random = new Random();
-            final int index = random.nextInt(list.length);
-            groupname = list[index];
-            return checkGroupName(groupname);
-        }
-        return groupname;
-    }
 
     public void getGroup_subFile() {
 
+        allPaths.clear();
+        final File[] leftList = new File(MyApp.getFiledir() + File.separator + leftGroupName).listFiles();
+        for (File path : leftList) {
+            if (path.getName().contains(".jpg"))
+                allPaths.add(path.getAbsolutePath());
+        }
+        final File[] rightList = new File(MyApp.getFiledir() + File.separator + rightGroupName).listFiles();
 
-            final File[] leftList = new File(MyApp.getFiledir()+File.separator+leftGroupName).listFiles();
-            for (File path : leftList) {
-                if (path.getName().contains(".jpg"))
-                    allPaths.add( path.getAbsolutePath());
-            }
-            final File[] rightList = new File(MyApp.getFiledir()+File.separator+rightGroupName).listFiles();
-
-            for (File path : rightList) {
-                if (path.getName().contains(".jpg"))
-                    allPaths.add(path.getAbsolutePath());
-            }
-
-
+        for (File path : rightList) {
+            if (path.getName().contains(".jpg"))
+                allPaths.add(path.getAbsolutePath());
+        }
 
 
     }

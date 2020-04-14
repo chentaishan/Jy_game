@@ -46,6 +46,12 @@ public class SortTypeLayout extends LinearLayout {
     int totalDividerWidth = 10 ;
 
 
+    public void reset(){
+
+        removeAllViews();
+        listBeans.clear();
+    }
+
     public void setGroupName(String name){
 
         final TextView textView = new TextView(getContext());
@@ -71,6 +77,10 @@ public class SortTypeLayout extends LinearLayout {
 
     public static int getImageItemWidth() {
         return imageWidth;
+    }
+
+    public int getCount() {
+        return listBeans.size();
     }
 
     /**
@@ -157,14 +167,6 @@ public class SortTypeLayout extends LinearLayout {
     public interface IUpdateUIListener<T> {
 
         void setItem(T t, ImageView img);
-    }
-
-    class ViewHolder {
-        ImageView imageView;
-
-        public ViewHolder(View item) {
-            imageView = item.findViewById(R.id.image);
-        }
     }
 
 
