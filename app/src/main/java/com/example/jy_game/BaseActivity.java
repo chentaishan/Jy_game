@@ -199,17 +199,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected int gaussianBlurValue=0;
     protected void setPicView(ImageView mImageView, MySelfGridView mGridview) {
 
-        try {
 
-
-            final Bitmap bitmap = BitmapFactory.decodeStream(getAssets().open(hostDrawable));
+//            final Bitmap bitmap = BitmapFactory.decodeStream(getAssets().open(hostDrawable));
 //            Imageutils.blurBitmap(this,bitmap,11f)
 
-            mImageView.setImageBitmap(bitmap);
+            mImageView.setImageBitmap(BitmapFactory.decodeFile(hostDrawable));
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         try {
             mGridview.initGridList(this, drawablePaths, new MySelfGridView.IUpdateUIListener() {
@@ -218,22 +213,12 @@ public abstract class BaseActivity extends AppCompatActivity {
                 public void setItem(Object o, ImageView img) {
 
                     String path = (String) o;
-                    try {
-                        img.setTag(path);
-                        Bitmap  bitmap = BitmapFactory.decodeStream(getResources().getAssets().open(path));
-//                        if (gaussianBlurValue!=0&&!path.equals(hostDrawable)){
-//
-//
-//                            String tint = Imageutils.backGroudhint(gaussianBlurValue);
-//                            ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor(tint));
-//                            img.setImageTintList(colorStateList );
-//                        }
 
+                        img.setTag(path);
+                        Bitmap  bitmap =BitmapFactory.decodeFile(path);
 
                         img.setImageBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
 
                 }
             });

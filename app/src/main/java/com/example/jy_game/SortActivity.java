@@ -38,7 +38,7 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
     private int mTop;
     private int mLeft;
 
-    int defaultTopDP=44;
+    int defaultTopDP = 44;
     int defaultHostWidthDP = 111;
 
     int defaultLeftPX;
@@ -46,17 +46,17 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
 
     int maxLeftMargin;
     int maxTopMargin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sort);
 
-        defaultLeftPX = (DensityUtil.getScreenWidth(this)-DensityUtil.dp2px(this,defaultHostWidthDP))/2;
-        defaultTopPX = DensityUtil.dp2px(this,defaultTopDP);
+        defaultLeftPX = (DensityUtil.getScreenWidth(this) - DensityUtil.dp2px(this, defaultHostWidthDP)) / 2;
+        defaultTopPX = DensityUtil.dp2px(this, defaultTopDP);
 
-        maxLeftMargin = DensityUtil.getScreenWidth(this)-DensityUtil.dp2px(this,defaultHostWidthDP);
-        maxTopMargin = DensityUtil.getScreenHeight(this)-DensityUtil.dp2px(this,defaultHostWidthDP)-getNavigationBarHeight();
-
+        maxLeftMargin = DensityUtil.getScreenWidth(this) - DensityUtil.dp2px(this, defaultHostWidthDP);
+        maxTopMargin = DensityUtil.getScreenHeight(this) - DensityUtil.dp2px(this, defaultHostWidthDP) - getNavigationBarHeight();
 
 
         initView();
@@ -67,15 +67,16 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
 
         setGroupname();
     }
+
     private int getNavigationBarHeight() {
 
-        int resourceId = getResources().getIdentifier("navigation_bar_height","dimen", "android");
+        int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
         int height = getResources().getDimensionPixelSize(resourceId);
         Log.v("dbw", "Navi height:" + height);
         return height;
     }
 
-    public int getStatusBarHeight(){
+    public int getStatusBarHeight() {
         int actionBarHeight = 0;
         TypedValue tv = new TypedValue();
         if (this.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
@@ -116,7 +117,7 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
                 int left = location[0];
                 int top = location[1];
 
-                addItem2Layout(mImage,left,top);
+                addItem2Layout(mImage, left, top);
 
 
                 break;
@@ -124,14 +125,14 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
         return true;
     }
 
-    private void addItem2Layout(ImageView mImage,int left, int top) {
+    private void addItem2Layout(ImageView mImage, int left, int top) {
 
         final View leftView = DensityUtil.addItem2layout(mLayoutLeft, left, top);
         final View rightView = DensityUtil.addItem2layout(mLayoutRight, left, top);
         Log.d(TAG, "addItem2Layout: leftView=" + leftView + "  rightView=" + rightView);
-        final String imgPath   = (String) mImage.getTag();
+        final String imgPath = (String) mImage.getTag();
 
-        if (leftView!=null&&imgPath.contains(leftGroupName)){
+        if (leftView != null && imgPath.contains(leftGroupName)) {
             try {
                 mLayoutLeft.addGridList(SortActivity.this, currImgPath, new SortTypeLayout.IUpdateUIListener() {
                     @Override
@@ -139,11 +140,9 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
 
                         String path = (String) o;
                         img.setTag(path);
-                        try {
-                            img.setImageBitmap(BitmapFactory.decodeStream(getAssets().open(path)));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+
+                        img.setImageBitmap(BitmapFactory.decodeFile(path));
+
                     }
                 });
             } catch (IllegalAccessException e) {
@@ -152,7 +151,7 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
 
             getHostpic();
 
-        } else if (rightView!=null&&imgPath.contains(rightGroupName)){
+        } else if (rightView != null && imgPath.contains(rightGroupName)) {
             try {
                 mLayoutRight.addGridList(SortActivity.this, currImgPath, new SortTypeLayout.IUpdateUIListener() {
                     @Override
@@ -173,7 +172,7 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
 
 //            mTop=0;
 //            mLeft=0;
@@ -181,6 +180,7 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
 //            setImageViewMargin(l,t);
         }
     }
+
     /**
      * 动态设置控件的marginTop 和 marginLeft的值
      *
@@ -208,9 +208,10 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
         layoutParams.leftMargin = left;
         mImage.setLayoutParams(layoutParams);
     }
+
     public void setGroupname() {
 
-        Log.d(TAG, "setGroupname: leftgroupname="+leftGroupName+"--rightgroupName="+rightGroupName);
+        Log.d(TAG, "setGroupname: leftgroupname=" + leftGroupName + "--rightgroupName=" + rightGroupName);
         mLayoutLeft.setGroupName(leftGroupName.split("-")[1]);
         mLayoutRight.setGroupName(rightGroupName.split("-")[1]);
     }
@@ -230,8 +231,8 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
      */
     public void getHostpic() {
 
-        mTop=0;
-        mLeft=0;
+        mTop = 0;
+        mLeft = 0;
 
         final Random random = new Random();
         final int index = random.nextInt(allPaths.size() - 1);
@@ -239,14 +240,12 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
         currImgPath = allPaths.get(index);
         Log.d(TAG, "getHostpic: " + index + "---path=" + currImgPath);
 
-        try {
-            mImage.setTag(currImgPath);
-            mImage.setImageBitmap(BitmapFactory.decodeStream(getAssets().open(currImgPath)));
 
-            setImageViewMargin(defaultLeftPX,defaultTopPX);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mImage.setTag(currImgPath);
+        mImage.setImageBitmap(BitmapFactory.decodeFile(currImgPath));
+
+        setImageViewMargin(defaultLeftPX, defaultTopPX);
+
 
     }
 
@@ -264,7 +263,7 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
             leftGroupName = list[leftIndex];
             rightGroupName = list[rightIndex];
 
-            leftGroupName =checkGroupName(leftGroupName);
+            leftGroupName = checkGroupName(leftGroupName);
             rightGroupName = checkGroupName(rightGroupName);
 
         } catch (IOException e) {
@@ -274,9 +273,10 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
 
 
     }
+
     public void anim() {
 
-        Log.d(TAG, "anim: mTop="+mTop+"----defaTop="+defaultTopPX);
+        Log.d(TAG, "anim: mTop=" + mTop + "----defaTop=" + defaultTopPX);
 
         ValueAnimator valueAnimator1 = ValueAnimator.ofInt(mTop, defaultTopPX);
 
@@ -302,15 +302,17 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
 
         valueAnimator1.start();
     }
+
     /**
      * 如果组名里不包含"-"，证明是有异常
+     *
      * @param groupname
      * @return
      * @throws IOException
      */
     public String checkGroupName(String groupname) throws IOException {
-        Log.d(TAG, "checkGroupName: "+groupname);
-        if (!groupname.contains("-")){
+        Log.d(TAG, "checkGroupName: " + groupname);
+        if (!groupname.contains("-")) {
             final String[] list = getAssets().list("");
             final Random random = new Random();
             final int index = random.nextInt(list.length);
@@ -326,12 +328,12 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
             final String[] leftList = getAssets().list(leftGroupName);
             for (String path : leftList) {
                 if (path.contains(".jpg"))
-                    allPaths.add(leftGroupName+"/"+path);
+                    allPaths.add(leftGroupName + "/" + path);
             }
             final String[] rightList = getAssets().list(rightGroupName);
             for (String path : rightList) {
                 if (path.contains(".jpg"))
-                    allPaths.add(rightGroupName+"/"+path);
+                    allPaths.add(rightGroupName + "/" + path);
             }
 
 

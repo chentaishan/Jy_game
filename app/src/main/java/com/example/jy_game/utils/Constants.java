@@ -2,7 +2,11 @@ package com.example.jy_game.utils;
 
 public class Constants {
 
+
+    public static int threadNum =0;
+
     public static final String PIC_NUM = "pic_num";
+    // 保存所有图片名称sp
     public static final String IMGS_SP_KEY = "imgs";
 
     public static final String baseUrl = "http://fy.iciba.com/";

@@ -105,9 +105,9 @@ public class ReceptiveActivity extends AppCompatActivity {
                     final String path = (String) o;
 
                     Log.d(TAG, "setItem: 图片地址=" + path);
-                    try {
+
                         img.setTag(path);
-                        img.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open(path)));
+                        img.setImageBitmap(BitmapFactory.decodeFile( path));
                         img.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -123,9 +123,7 @@ public class ReceptiveActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
                 }
             });
         } catch (IllegalAccessException e) {

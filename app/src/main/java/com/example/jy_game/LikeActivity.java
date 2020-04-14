@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
@@ -63,17 +64,15 @@ public class LikeActivity extends BaseActivity implements View.OnTouchListener {
         // 获取当前相似图片
         final String substring = hostDrawable.substring(0,hostDrawable.lastIndexOf("/"));
         Log.d(TAG, "getEachPageList: 截取路径="+substring);
-        try {
-            final String[] files = getAssets().list(substring);
+
+            final File[] files = new File(substring).listFiles( );
             final Random random = new Random();
             final int index = random.nextInt(files.length);
             Log.d(TAG, "当前相似图片随机插位: "+index);
-            drawablePaths[index%maxPics]=substring+"/"+files[index];
+            drawablePaths[index%maxPics]=files[index].getAbsolutePath();
 //            .set(index%maxPics,files[index]);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,10 +9,43 @@
 
 
     <GridView
+        android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:numColumns="2"
         android:horizontalSpacing="11dp"
-        android:id="@+id/gridview"
-        />
-</LinearLayout>
+        android:numColumns="2" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:id="@+id/loading_layout"
+
+        android:visibility="gone"
+        android:background="#88000000"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textDirection="ltr"
+
+            />
+
+        <TextView
+            android:layout_below="@+id/progress"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="22dp"
+            android:layout_width="match_parent"
+            android:textSize="22sp"
+            android:textColor="@color/colorAccent"
+            android:layout_height="wrap_content"
+            android:text="正在加载...." />
+
+    </RelativeLayout>
+
+</RelativeLayout>

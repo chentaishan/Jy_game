@@ -32,6 +32,12 @@ import static com.example.jy_game.utils.Constants.IMGS_SP_KEY;
 public class NetUtils {
 
 
+    public static ExecutorService executorService;
+
+    public static boolean getExecutorService() {
+        return executorService!=null&&executorService.isShutdown()? true:false;
+    }
+
     public static OkHttpClient getOkHttpClient() {
         return new OkHttpClient.Builder()
                 .addNetworkInterceptor(new NetWorkInterceptor())
@@ -52,7 +58,8 @@ public class NetUtils {
             public void onResponse(Call<Imagebean> call, Response<Imagebean> response) {
 
                 List<Imagebean.DataBean> data = response.body().getData();
-                ExecutorService executorService = Executors.newCachedThreadPool();
+                executorService = Executors.newCachedThreadPool();
+
 
                 String imgUrls = SpUtils.getInstance().getString(IMGS_SP_KEY);
 

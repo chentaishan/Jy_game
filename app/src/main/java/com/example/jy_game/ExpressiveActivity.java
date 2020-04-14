@@ -100,9 +100,9 @@ public class ExpressiveActivity extends AppCompatActivity implements View.OnClic
                 View root = LayoutInflater.from(ExpressiveActivity.this).inflate(R.layout.viewpager_item, null);
                 container.addView(root);
                 ImageView img = root.findViewById(R.id.image);
-                try {
-                    final InputStream instream =getResources(). getAssets().open(drawablePaths[position]);
-                    img.setImageBitmap(BitmapFactory.decodeStream(instream));
+
+//                    final InputStream instream =getResources(). getAssets().open(drawablePaths[position]);
+                    img.setImageBitmap( BitmapFactory.decodeFile(drawablePaths[position])  );
                     img.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -121,9 +121,7 @@ public class ExpressiveActivity extends AppCompatActivity implements View.OnClic
                             });
                         }
                     });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
                 return img;
             }
 

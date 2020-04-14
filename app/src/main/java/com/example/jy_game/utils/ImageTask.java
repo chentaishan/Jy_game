@@ -4,6 +4,9 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.example.jy_game.MyApp;
+import com.example.jy_game.bean.ThreadStatusBean;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +18,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 import static com.example.jy_game.utils.Constants.IMGS_SP_KEY;
+import static com.example.jy_game.utils.Constants.threadNum;
 
 public class ImageTask implements Runnable {
 
@@ -27,8 +31,12 @@ public class ImageTask implements Runnable {
 
         this.fileName = fileName;
         this.url = url;
+        Constants.threadNum ++;
+        //开启下载进度条
+        ThreadStatusBean threadStatusBean = new ThreadStatusBean();
 
-
+        threadStatusBean.isFinish = false;
+        EventBus.getDefault().postSticky(threadStatusBean);
         Log.d(TAG, "ImageTask: " + url);
     }
 
@@ -94,6 +102,14 @@ public class ImageTask implements Runnable {
                 e.printStackTrace();
             }
 
+        }
+        Constants.threadNum --;
+        Log.d(TAG, "run: "+ threadNum);
+        if (Constants.threadNum <=0){
+            ThreadStatusBean threadStatusBean = new ThreadStatusBean();
+            threadStatusBean.num=threadNum;
+            threadStatusBean.isFinish = true;
+            EventBus.getDefault().postSticky(threadStatusBean);
         }
 
 

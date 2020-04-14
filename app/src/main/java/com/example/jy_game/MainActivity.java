@@ -1,11 +1,7 @@
 package com.example.jy_game;
 
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,13 +13,20 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.jy_game.bean.ThreadStatusBean;
 import com.example.jy_game.net.NetUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
+
+import static com.example.jy_game.MyApp.stringList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -48,28 +51,70 @@ public class MainActivity extends AppCompatActivity {
             , "图片分类"
     };
     String rootPath = "";
+    private ProgressBar mProgress;
+    private RelativeLayout mLayoutLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        NetUtils.getImagelist();
+
 
         initView();
 
+        EventBus.getDefault().register(this);
 
+        initPicList();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void isDownloadFinish(ThreadStatusBean threadStatusBean) {
+        Log.d(TAG, "isDownloadFinish: " + threadStatusBean.isFinish + "--" + threadStatusBean.num);
+        if (threadStatusBean.num <= 0 && threadStatusBean.isFinish) {
+            mLayoutLoading.setVisibility(View.GONE);
+            initPicList();
+
+        } else if (mLayoutLoading.getVisibility() == View.GONE) {
+            mLayoutLoading.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void initPicList() {
+
+        File filedir = MyApp.getFiledir();
+
+        File[] files = filedir.listFiles();
+        for (int i = 0; i < files.length; i++) {
+
+            File f = files[i];
+            if (f.isDirectory()) {
+
+                for (File ff : f.listFiles()) {
+                    if (ff.getName().endsWith(".jpg")) {
+                        stringList.add(ff.getAbsolutePath());
+                    }
+                }
+            }
+
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.option_menu,menu);
+        getMenuInflater().inflate(R.menu.option_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.setting:
                 Intent intent = new Intent(MainActivity.this, SettingActivity.class);
 
@@ -86,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                switch (position){
+                switch (position) {
 
                     case 0:
                         Intent intent = new Intent(MainActivity.this, WholeActivity.class);
@@ -157,5 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 return root;
             }
         });
+        mProgress = (ProgressBar) findViewById(R.id.progress);
+        mLayoutLoading = (RelativeLayout) findViewById(R.id.loading_layout);
     }
 }
