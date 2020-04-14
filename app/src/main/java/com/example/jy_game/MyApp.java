@@ -16,7 +16,7 @@ import java.util.List;
 public class MyApp extends Application {
 
     public static Context context;
-    static List<String> stringList = new ArrayList<>();
+    public static List<String> stringList = new ArrayList<>();
     private static File cacheDir;
 
     @Override
