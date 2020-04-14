@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 
 import com.example.jy_game.view.SortTypeLayout;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,16 +77,7 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
         return height;
     }
 
-    public int getStatusBarHeight() {
-        int actionBarHeight = 0;
-        TypedValue tv = new TypedValue();
-        if (this.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, this.getResources().getDisplayMetrics());
-            Log.i(TAG, "------------actionBarHeight=" + actionBarHeight);
-        }
 
-        return actionBarHeight;
-    }
 
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
@@ -158,13 +150,11 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
                     public void setItem(Object o, ImageView img) {
 
 
-                        try {
+
                             String path = (String) o;
                             img.setTag(path);
-                            img.setImageBitmap(BitmapFactory.decodeStream(getAssets().open(path)));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                            img.setImageBitmap(BitmapFactory.decodeFile(path));
+
                     }
                 });
                 getHostpic();
@@ -253,15 +243,15 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
     protected void getGroupName() {
 
         try {
-            final String[] list = getAssets().list("");
+            final File[] list = MyApp.getFiledir().listFiles();
             final Random random = new Random();
             final int leftIndex = random.nextInt(list.length);
             int rightIndex = random.nextInt(list.length);
             if (leftIndex == rightIndex) {
                 rightIndex = random.nextInt(list.length);
             }
-            leftGroupName = list[leftIndex];
-            rightGroupName = list[rightIndex];
+            leftGroupName = list[leftIndex].getName();
+            rightGroupName = list[rightIndex].getName();
 
             leftGroupName = checkGroupName(leftGroupName);
             rightGroupName = checkGroupName(rightGroupName);
@@ -324,22 +314,21 @@ public class SortActivity extends AppCompatActivity implements View.OnTouchListe
 
     public void getGroup_subFile() {
 
-        try {
-            final String[] leftList = getAssets().list(leftGroupName);
-            for (String path : leftList) {
-                if (path.contains(".jpg"))
-                    allPaths.add(leftGroupName + "/" + path);
+
+            final File[] leftList = new File(MyApp.getFiledir()+File.separator+leftGroupName).listFiles();
+            for (File path : leftList) {
+                if (path.getName().contains(".jpg"))
+                    allPaths.add( path.getAbsolutePath());
             }
-            final String[] rightList = getAssets().list(rightGroupName);
-            for (String path : rightList) {
-                if (path.contains(".jpg"))
-                    allPaths.add(rightGroupName + "/" + path);
+            final File[] rightList = new File(MyApp.getFiledir()+File.separator+rightGroupName).listFiles();
+
+            for (File path : rightList) {
+                if (path.getName().contains(".jpg"))
+                    allPaths.add(path.getAbsolutePath());
             }
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
     }
 }
